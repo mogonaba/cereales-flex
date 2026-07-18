@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration — Céréales Flex</title>
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<!-- ===== CONNEXION ===== -->
+<div id="ecran-connexion">
+  <form class="carte-connexion" id="form-admin-connexion">
+    <h1>🌾 Céréales Flex</h1>
+    <p>Espace administrateur</p>
+    <div class="champ"><label>Téléphone</label><input type="tel" name="telephone" required autofocus></div>
+    <div class="champ"><label>Mot de passe</label><input type="password" name="mot_de_passe" required></div>
+    <button class="btn btn-vert btn-bloc" type="submit">Se connecter</button>
+  </form>
+</div>
+
+<!-- ===== APPLICATION ADMIN ===== -->
+<div id="app-admin" class="masque">
+  <aside class="barre-laterale">
+    <div class="logo">🌾 Céréales Flex</div>
+    <button class="lien-nav actif" data-panneau="tableau-de-bord">📊 Tableau de bord</button>
+    <button class="lien-nav" data-panneau="produits">🌾 Produits</button>
+    <button class="lien-nav" data-panneau="promotions">🏷️ Promotions</button>
+    <button class="lien-nav" data-panneau="categories">🗂️ Catégories</button>
+    <button class="lien-nav" data-panneau="commandes">📦 Commandes<span class="pastille masque" id="pastille-commandes"></span></button>
+    <button class="lien-nav" data-panneau="clients">🪪 Clients & KYC<span class="pastille masque" id="pastille-kyc"></span></button>
+    <button class="lien-nav" data-panneau="deductions">🏦 Coupures à la source<span class="pastille masque" id="pastille-deductions"></span></button>
+    <button class="lien-nav" data-panneau="conversations">💬 Conversations<span class="pastille masque" id="pastille-messages"></span></button>
+    <button class="lien-nav" data-panneau="avis">⭐ Avis clients<span class="pastille masque" id="pastille-avis"></span></button>
+    <button class="lien-nav" data-panneau="idees">💡 Boîte à idées<span class="pastille masque" id="pastille-idees"></span></button>
+    <button class="lien-nav" data-panneau="notifications">🔔 Notifications</button>
+    <button class="lien-nav" data-panneau="parametres">⚙️ Paramètres</button>
+    <div class="pied-lateral">
+      <span id="nom-admin-connecte"></span><br>
+      <button class="btn btn-fantome btn-petit" id="btn-admin-deconnexion" style="margin-top:8px;">Se déconnecter</button>
+    </div>
+  </aside>
+
+  <main class="contenu-principal">
+
+    <!-- TABLEAU DE BORD -->
+    <section class="panneau-admin actif" id="panneau-tableau-de-bord">
+      <div class="entete-panneau"><h2>Tableau de bord</h2></div>
+      <div class="grille-stats" id="grille-stats"></div>
+      <div class="carte">
+        <h3>📈 Ventes des 7 derniers jours</h3>
+        <div id="graphique-ventes"></div>
+      </div>
+      <div class="carte">
+        <h3>Produits en stock bas</h3>
+        <div id="liste-stock-bas"></div>
+      </div>
+    </section>
+
+    <!-- PRODUITS -->
+    <section class="panneau-admin" id="panneau-produits">
+      <div class="entete-panneau">
+        <h2>Produits</h2>
+        <button class="btn btn-or" id="btn-nouveau-produit">+ Ajouter un produit</button>
+      </div>
+      <div class="carte masque" id="carte-form-produit">
+        <h3 id="titre-form-produit">Nouveau produit</h3>
+        <form id="form-produit">
+          <input type="hidden" name="id">
+          <div class="champ"><label>Catégorie</label><select name="categorie_id" id="select-categorie-produit" required></select></div>
+          <div class="champ"><label>Nom</label><input type="text" name="nom" required></div>
+          <div class="champ"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+            <div class="champ"><label>Prix unitaire (FCFA)</label><input type="number" name="prix_unitaire" required></div>
+            <div class="champ"><label>Unité</label><input type="text" name="unite" value="kg" required></div>
+            <div class="champ"><label>Stock</label><input type="number" name="stock" value="0"></div>
+          </div>
+          <div class="champ">
+            <label>Photo du produit <small>facultatif — tous formats, 25 Mo max. Une icône s'affiche sinon.</small></label>
+            <label class="champ-fichier" id="zone-image-produit">
+              <span id="texte-image-produit">📷 Choisir un fichier</span>
+              <input type="file" id="input-image-produit" hidden>
+            </label>
+            <img id="apercu-image-produit" src="" alt="Aperçu" class="masque" style="max-width:120px;max-height:120px;border-radius:8px;margin-top:8px;display:block;">
+            <input type="hidden" name="image">
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-vert" type="submit">Enregistrer</button>
+            <button class="btn btn-fantome" type="button" id="btn-annuler-produit">Annuler</button>
+          </div>
+        </form>
+      </div>
+      <table>
+        <thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Statut</th><th></th></tr></thead>
+        <tbody id="tbody-produits"></tbody>
+      </table>
+    </section>
+
+    <!-- PROMOTIONS -->
+    <section class="panneau-admin" id="panneau-promotions">
+      <div class="entete-panneau"><h2>Promotions</h2></div>
+      <div class="carte" style="max-width:520px;">
+        <h3>Créer une promotion</h3>
+        <form id="form-promotion">
+          <div class="champ"><label>Nom de la promotion</label><input type="text" name="nom" required placeholder="Ex : Promo maïs de saison"></div>
+          <div class="champ">
+            <label>S'applique à</label>
+            <select name="type_cible" id="select-type-cible-promo">
+              <option value="produit">Un produit précis</option>
+              <option value="categorie">Toute une catégorie</option>
+            </select>
+          </div>
+          <div class="champ" id="champ-promo-produit"><label>Produit</label><select name="product_id" id="select-produit-promo"></select></div>
+          <div class="champ masque" id="champ-promo-categorie"><label>Catégorie</label><select name="categorie_id" id="select-categorie-promo"></select></div>
+          <div class="champ"><label>Réduction (%)</label><input type="number" name="reduction_pourcentage" min="1" max="90" required></div>
+          <div class="ligne-2">
+            <div class="champ"><label>Date de début (facultatif)</label><input type="date" name="date_debut"></div>
+            <div class="champ"><label>Date de fin (facultatif)</label><input type="date" name="date_fin"></div>
+          </div>
+          <button class="btn btn-terre btn-bloc" type="submit">Lancer la promotion</button>
+        </form>
+      </div>
+      <div id="liste-promotions"></div>
+    </section>
+
+    <!-- CATÉGORIES -->
+    <section class="panneau-admin" id="panneau-categories">
+      <div class="entete-panneau"><h2>Disponibilité des catégories</h2></div>
+      <p style="color:var(--texte-clair);font-size:.88rem;max-width:520px;">Désactivez une catégorie pour l'afficher grisée sur le site (« bientôt disponible ») sans supprimer ses produits.</p>
+      <div id="liste-categories-admin"></div>
+    </section>
+
+    <!-- COMMANDES -->
+    <section class="panneau-admin" id="panneau-commandes">
+      <div class="entete-panneau"><h2>Commandes</h2></div>
+      <nav class="sous-onglets-admin" id="filtres-commandes">
+        <button class="sous-onglet-admin actif" data-statut="">Toutes</button>
+        <button class="sous-onglet-admin" data-statut="en_attente">En attente</button>
+        <button class="sous-onglet-admin" data-statut="confirmee">Confirmées</button>
+        <button class="sous-onglet-admin" data-statut="en_livraison">En livraison</button>
+        <button class="sous-onglet-admin" data-statut="livree">Livrées</button>
+        <button class="sous-onglet-admin" data-statut="annulee">Annulées</button>
+      </nav>
+      <table>
+        <thead><tr><th>Client</th><th>Articles</th><th>Total</th><th>Paiement</th><th>Statut</th></tr></thead>
+        <tbody id="tbody-commandes"></tbody>
+      </table>
+    </section>
+
+    <!-- CLIENTS & KYC -->
+    <section class="panneau-admin" id="panneau-clients">
+      <div class="entete-panneau"><h2>Clients & vérification d'identité (KYC)</h2></div>
+      <nav class="sous-onglets-admin" id="filtres-kyc">
+        <button class="sous-onglet-admin actif" data-kyc="">Tous</button>
+        <button class="sous-onglet-admin" data-kyc="en_attente">En attente</button>
+        <button class="sous-onglet-admin" data-kyc="valide">Validés</button>
+        <button class="sous-onglet-admin" data-kyc="rejete">Rejetés</button>
+      </nav>
+      <table>
+        <thead><tr><th>Nom</th><th>Téléphone</th><th>Localité</th><th>KYC</th><th></th></tr></thead>
+        <tbody id="tbody-clients"></tbody>
+      </table>
+      <div class="carte masque" id="carte-detail-client"></div>
+    </section>
+
+    <!-- DÉDUCTIONS -->
+    <section class="panneau-admin" id="panneau-deductions">
+      <div class="entete-panneau"><h2>Demandes de coupure à la source</h2></div>
+      <table>
+        <thead><tr><th>Client</th><th>Institution</th><th>Montant</th><th>Tranches</th><th>Statut</th></tr></thead>
+        <tbody id="tbody-deductions"></tbody>
+      </table>
+    </section>
+
+    <!-- CONVERSATIONS -->
+    <section class="panneau-admin" id="panneau-conversations">
+      <div class="entete-panneau"><h2>Conversations clients</h2></div>
+      <div class="liste-messages">
+        <div class="conv-liste" id="conv-liste"></div>
+        <div class="conv-fenetre">
+          <div class="conv-messages" id="conv-messages"><div class="vide">Sélectionnez une conversation</div></div>
+          <div class="conv-saisie">
+            <input type="text" id="conv-input" placeholder="Répondre…">
+            <button class="btn btn-vert" id="btn-conv-envoyer">Envoyer</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVIS -->
+    <section class="panneau-admin" id="panneau-avis">
+      <div class="entete-panneau"><h2>Modération des avis</h2></div>
+      <nav class="sous-onglets-admin" id="filtres-avis">
+        <button class="sous-onglet-admin actif" data-statut-avis="en_attente">En attente</button>
+        <button class="sous-onglet-admin" data-statut-avis="approuve">Approuvés</button>
+        <button class="sous-onglet-admin" data-statut-avis="rejete">Rejetés</button>
+      </nav>
+      <div id="liste-avis-admin"></div>
+    </section>
+
+    <!-- IDÉES -->
+    <section class="panneau-admin" id="panneau-idees">
+      <div class="entete-panneau"><h2>Boîte à idées</h2></div>
+      <div id="liste-idees-admin"></div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section class="panneau-admin" id="panneau-notifications">
+      <div class="entete-panneau"><h2>Notifications aux clients</h2></div>
+      <div class="carte" style="max-width:500px;">
+        <h3>Diffuser une notification</h3>
+        <p style="font-size:.85rem;color:var(--texte-clair);">Utilisez ceci pour annoncer un changement de prix, une promotion ou une nouveauté.</p>
+        <form id="form-notification">
+          <div class="champ"><label>Type</label>
+            <select name="type"><option value="info">Information</option><option value="promo">Promotion</option><option value="prix">Changement de prix</option></select>
+          </div>
+          <div class="champ"><label>Titre</label><input type="text" name="titre" required></div>
+          <div class="champ"><label>Message</label><textarea name="contenu" rows="3" required></textarea></div>
+          <div class="champ" style="display:flex;gap:16px;">
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500;"><input type="checkbox" name="envoyer_email" value="1" checked style="width:auto;"> Envoyer par email</label>
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500;"><input type="checkbox" name="envoyer_sms" value="1" checked style="width:auto;"> Envoyer par SMS</label>
+          </div>
+          <button class="btn btn-terre btn-bloc" type="submit">Publier</button>
+        </form>
+      </div>
+      <div id="liste-notifications-admin"></div>
+    </section>
+
+    <!-- PARAMÈTRES -->
+    <section class="panneau-admin" id="panneau-parametres">
+      <div class="entete-panneau"><h2>Paramètres de calcul</h2></div>
+      <div class="carte" style="max-width:480px;">
+        <h3>Livraison</h3>
+        <form id="form-parametres">
+          <div class="champ"><label>Latitude du point de départ</label><input type="number" step="any" name="depart_latitude"></div>
+          <div class="champ"><label>Longitude du point de départ</label><input type="number" step="any" name="depart_longitude"></div>
+          <div class="champ"><label>Tarif par km (FCFA)</label><input type="number" name="tarif_km"></div>
+          <div class="champ"><label>Livraison minimum (FCFA)</label><input type="number" name="livraison_minimum"></div>
+          <div class="champ"><label>Frais d'échelonnement par tranche additionnelle (%)</label><input type="number" name="frais_echelonnement_pourcentage"></div>
+          <button class="btn btn-vert btn-bloc" type="submit">Enregistrer</button>
+        </form>
+      </div>
+      <div class="carte" style="max-width:480px;">
+        <h3>Changer mon mot de passe</h3>
+        <form id="form-mdp-admin">
+          <div class="champ"><label>Ancien mot de passe</label><input type="password" name="ancien_mot_de_passe" required></div>
+          <div class="champ"><label>Nouveau mot de passe</label><input type="password" name="nouveau_mot_de_passe" minlength="6" required></div>
+          <button class="btn btn-terre btn-bloc" type="submit">Changer</button>
+        </form>
+      </div>
+
+      <div class="carte" style="max-width:520px;">
+        <h3>💬 Disponibilité du chat</h3>
+        <p style="font-size:.85rem;color:var(--texte-clair);">Quand vous êtes hors-ligne, un message automatique répond immédiatement aux clients.</p>
+        <form id="form-chat-dispo">
+          <div class="champ">
+            <label>Statut</label>
+            <select name="admin_en_ligne"><option value="1">🟢 En ligne — je réponds moi-même</option><option value="0">🔴 Hors-ligne — réponse automatique</option></select>
+          </div>
+          <div class="champ"><label>Message d'absence</label><textarea name="message_absence" rows="3"></textarea></div>
+          <button class="btn btn-vert btn-bloc" type="submit">Enregistrer</button>
+        </form>
+      </div>
+
+      <div class="carte" style="max-width:520px;">
+        <h3>💳 Passerelles de paiement</h3>
+        <p style="font-size:.85rem;color:var(--texte-clair);">Renseignez une clé API pour activer un moyen de paiement sur le site. Sans clé, il reste visible mais marqué « bientôt disponible ».</p>
+        <form id="form-paiement">
+          <div id="champs-fournisseurs-paiement"></div>
+          <button class="btn btn-vert btn-bloc" type="submit" style="margin-top:10px;">Enregistrer</button>
+        </form>
+      </div>
+
+      <div class="carte" style="max-width:520px;">
+        <h3>✉️ Notifications email & SMS</h3>
+        <form id="form-notif-canaux">
+          <div class="champ"><label>Email actif</label><select name="email_actif"><option value="0">Non</option><option value="1">Oui</option></select></div>
+          <div class="ligne-2">
+            <div class="champ"><label>Hôte SMTP</label><input type="text" name="email_smtp_hote" placeholder="smtp.gmail.com"></div>
+            <div class="champ"><label>Port SMTP</label><input type="number" name="email_smtp_port" placeholder="587"></div>
+          </div>
+          <div class="champ"><label>Utilisateur SMTP</label><input type="text" name="email_smtp_utilisateur"></div>
+          <div class="champ"><label>Mot de passe SMTP</label><input type="password" name="email_smtp_mot_de_passe"></div>
+          <div class="champ"><label>Adresse expéditeur</label><input type="email" name="email_expediteur"></div>
+          <hr style="border:none;border-top:1px solid var(--creme-fonce);margin:14px 0;">
+          <div class="champ"><label>SMS actif</label><select name="sms_actif"><option value="0">Non</option><option value="1">Oui</option></select></div>
+          <div class="champ"><label>Fournisseur SMS</label><input type="text" name="sms_fournisseur" placeholder="Ex : orange, twilio..."></div>
+          <div class="champ"><label>Clé API SMS</label><input type="password" name="sms_cle_api"></div>
+          <div class="champ"><label>Nom de l'expéditeur SMS</label><input type="text" name="sms_expediteur"></div>
+          <button class="btn btn-vert btn-bloc" type="submit" style="margin-top:10px;">Enregistrer</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script src="/admin/admin.js"></script>
+</body>
+</html>

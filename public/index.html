@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Céréales Flex — Céréales, farines, aliments d'élevage & matériel agricole</title>
+<meta name="description" content="Céréales, farines, son, aliments pour bétail et volaille, couveuses et matériel d'élevage — livrés partout, calcul de livraison intelligent et paiement échelonné.">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/images/icone.svg" type="image/svg+xml">
+<meta name="theme-color" content="#E8AC3D">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="entete">
+  <div class="barre-haute">
+    <a href="/" class="logo"><span class="grain">🌾</span> Céréales Flex</a>
+    <div class="actions-haut">
+      <button class="icone-btn" id="btn-theme" title="Basculer le mode sombre">🌙</button>
+      <button class="icone-btn" id="btn-notifs" title="Notifications">🔔<span class="badge masque" id="badge-notifs">0</span></button>
+      <button class="icone-btn" id="btn-compte" title="Mon compte">👤</button>
+      <button class="icone-btn" id="btn-panier" title="Panier">🛒<span class="badge masque" id="badge-panier">0</span></button>
+    </div>
+  </div>
+  <nav class="onglets" id="onglets-principaux">
+    <button class="onglet actif" data-vue="boutique" data-couleur="or">Boutique<span class="barre-pointillee"></span></button>
+    <button class="onglet" data-vue="compte" data-couleur="vert">Mon compte<span class="barre-pointillee"></span></button>
+    <button class="onglet" data-vue="discussion" data-couleur="terre">Discussion<span class="barre-pointillee"></span></button>
+    <button class="onglet" data-vue="avis" data-couleur="or">Avis clients<span class="barre-pointillee"></span></button>
+    <button class="onglet" data-vue="idees" data-couleur="vert">Boîte à idées<span class="barre-pointillee"></span></button>
+  </nav>
+</header>
+
+<main class="conteneur">
+
+  <!-- ===== VUE BOUTIQUE ===== -->
+  <section id="vue-boutique" class="vue">
+    <div class="hero">
+      <h1>Tout pour la ferme, livré chez vous</h1>
+      <p>Céréales, farines, son, aliments pour bétail et volaille, couveuses et matériel d'élevage. Livraison calculée au juste prix, paiement échelonné possible.</p>
+      <div class="hero-actions">
+        <button class="btn btn-or" onclick="document.getElementById('recherche-produits').scrollIntoView({behavior:'smooth'})">Voir le catalogue</button>
+        <button class="btn btn-contour" data-vue-lien="compte">Créer mon compte</button>
+      </div>
+    </div>
+
+    <section class="section-terroir">
+      <img src="/images/village-terroir.svg" alt="Illustration d'un village burkinabè : une femme étale du maïs à sécher au soleil devant les cases, sous un baobab" loading="lazy">
+      <p class="legende-terroir">Du terroir à votre table — chaque sac est sélectionné avec le même soin que nos familles apportent à leurs récoltes.</p>
+    </section>
+
+    <div style="margin-top:28px;">
+      <div class="recherche-barre" id="recherche-produits">
+        <input type="text" id="champ-recherche" placeholder="Rechercher un produit (maïs, farine, couveuse...)">
+        <button class="btn btn-fantome btn-petit" onclick="Boutique.rechercher()">Rechercher</button>
+        <select id="select-tri" style="border-radius:8px;border:1.5px solid var(--creme-fonce);padding:9px 10px;background:var(--blanc);color:var(--texte);">
+          <option value="recent">Plus récents</option>
+          <option value="prix_asc">Prix croissant</option>
+          <option value="prix_desc">Prix décroissant</option>
+          <option value="nom">Nom (A → Z)</option>
+        </select>
+      </div>
+
+      <nav class="sous-onglets" id="filtres-categories">
+        <button class="sous-onglet actif" data-cat="">Tous les produits</button>
+        <button class="sous-onglet" id="filtre-favoris" data-cat="__favoris">♥ Mes favoris</button>
+      </nav>
+
+      <div id="grille-produits" class="grille-produits">
+        <div class="vide"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VUE COMPTE ===== -->
+  <section id="vue-compte" class="vue masque">
+    <div id="compte-non-connecte">
+      <nav class="sous-onglets">
+        <button class="sous-onglet actif" data-form="connexion">Connexion</button>
+        <button class="sous-onglet" data-form="inscription">Créer un compte</button>
+      </nav>
+
+      <!-- Connexion -->
+      <form id="form-connexion" class="carte" style="max-width:440px;">
+        <h2>Connexion</h2>
+        <p style="color:var(--texte-clair);font-size:.9rem;margin-top:-8px;">Connectez-vous avec votre numéro de téléphone et votre mot de passe.</p>
+        <div class="champ"><label>Numéro de téléphone</label><input type="tel" name="telephone" required></div>
+        <div class="champ"><label>Mot de passe</label><input type="password" name="mot_de_passe" required></div>
+        <button class="btn btn-vert btn-bloc" type="submit">Se connecter</button>
+      </form>
+
+      <!-- Inscription -->
+      <form id="form-inscription" class="carte masque" style="max-width:520px;">
+        <h2>Créer un compte</h2>
+        <p style="color:var(--texte-clair);font-size:.9rem;margin-top:-8px;">La vérification d'identité (CNIB) est nécessaire pour sécuriser votre compte et activer le paiement échelonné.</p>
+
+        <div class="ligne-2">
+          <div class="champ"><label>Prénom</label><input type="text" name="prenom" required></div>
+          <div class="champ"><label>Nom</label><input type="text" name="nom" required></div>
+        </div>
+        <div class="ligne-2">
+          <div class="champ"><label>Téléphone</label><input type="tel" name="telephone" required></div>
+          <div class="champ"><label>Mot de passe (6 caractères min.)</label><input type="password" name="mot_de_passe" minlength="6" required></div>
+        </div>
+        <div class="champ"><label>Email <small>(facultatif)</small></label><input type="email" name="email" placeholder="vous@exemple.com"></div>
+
+        <div class="champ"><label>Numéro de la CNIB</label><input type="text" name="cnib_numero" required></div>
+
+        <div class="ligne-2">
+          <div class="champ">
+            <label>Photo CNIB — recto</label>
+            <label class="champ-fichier" id="zone-recto">
+              <span id="texte-recto">📄 Choisir une photo</span>
+              <input type="file" accept="image/*" name="cnib_photo_recto" hidden required>
+            </label>
+          </div>
+          <div class="champ">
+            <label>Photo CNIB — verso</label>
+            <label class="champ-fichier" id="zone-verso">
+              <span id="texte-verso">📄 Choisir une photo</span>
+              <input type="file" accept="image/*" name="cnib_photo_verso" hidden required>
+            </label>
+          </div>
+        </div>
+
+        <div class="champ">
+          <label>Photo d'identité (portrait)</label>
+          <label class="champ-fichier" id="zone-portrait">
+            <span id="texte-portrait">🙂 Choisir une photo</span>
+            <input type="file" accept="image/*" name="photo_identite" hidden required>
+          </label>
+        </div>
+
+        <div class="champ"><label>Localité</label><input type="text" name="localite" placeholder="Ex : Ouagadougou, secteur 15"></div>
+
+        <div class="champ">
+          <label>Géolocalisation <small>(facultatif — améliore le calcul de livraison)</small></label>
+          <button type="button" class="btn btn-fantome btn-petit" id="btn-geoloc">📍 Utiliser ma position actuelle</button>
+          <input type="hidden" name="latitude"><input type="hidden" name="longitude">
+          <small id="statut-geoloc"></small>
+        </div>
+
+        <label class="case-consentement">
+          <input type="checkbox" name="cil_accepte" required>
+          <span>J'accepte que mes données personnelles (identité, CNIB, localisation) soient traitées conformément aux règles de protection des données à caractère personnel du Comité d'Informatique et des Libertés (CIL), uniquement dans le cadre de la gestion de mon compte et de mes commandes.</span>
+        </label>
+
+        <button class="btn btn-vert btn-bloc" type="submit" style="margin-top:14px;">Créer mon compte</button>
+      </form>
+    </div>
+
+    <div id="compte-connecte" class="masque">
+      <div class="carte" style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h2 id="salutation-client">Bonjour</h2>
+            <span class="badge-statut" id="badge-kyc"></span>
+          </div>
+          <button class="btn btn-fantome btn-petit" id="btn-deconnexion">Se déconnecter</button>
+        </div>
+      </div>
+
+      <nav class="sous-onglets">
+        <button class="sous-onglet actif" data-panneau-compte="commandes">Mes commandes</button>
+        <button class="sous-onglet" data-panneau-compte="echelonnement">Coupure à la source</button>
+        <button class="sous-onglet" data-panneau-compte="profil">Mon profil</button>
+      </nav>
+
+      <div id="panneau-commandes" class="panneau-compte">
+        <div id="liste-commandes"><div class="vide">Chargement…</div></div>
+      </div>
+
+      <div id="panneau-echelonnement" class="panneau-compte masque">
+        <div class="carte" style="max-width:520px;">
+          <h3>Demande de coupure à la source</h3>
+          <p style="font-size:.88rem;color:var(--texte-clair);">Le prélèvement se fait via votre banque ou votre employeur. Cette demande enregistre votre souhait — <strong>l'accord final est confirmé hors-ligne</strong> directement avec l'institution concernée avant toute mise en place.</p>
+          <form id="form-deduction">
+            <div class="champ">
+              <label>Source du prélèvement</label>
+              <select name="type_source" required>
+                <option value="banque">Ma banque</option>
+                <option value="employeur">Mon employeur</option>
+              </select>
+            </div>
+            <div class="champ"><label>Nom de l'institution</label><input type="text" name="nom_institution" required></div>
+            <div class="champ"><label>Contact de l'institution (facultatif)</label><input type="text" name="contact_institution"></div>
+            <div class="champ"><label>Référence employé / compte (facultatif)</label><input type="text" name="reference_employe"></div>
+            <div class="ligne-2">
+              <div class="champ"><label>Montant total (FCFA)</label><input type="number" name="montant_total" required></div>
+              <div class="champ"><label>Nombre de mois</label>
+                <select name="nb_tranches">
+                  <option value="2">2 mois</option><option value="3" selected>3 mois</option>
+                  <option value="4">4 mois</option><option value="5">5 mois</option><option value="6">6 mois</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-terre btn-bloc" type="submit">Envoyer la demande</button>
+          </form>
+        </div>
+        <div id="liste-deductions" style="margin-top:20px;"></div>
+      </div>
+
+      <div id="panneau-profil" class="panneau-compte masque">
+        <form id="form-profil" class="carte" style="max-width:440px;">
+          <h3>Localisation</h3>
+          <div class="champ"><label>Localité</label><input type="text" name="localite"></div>
+          <button type="button" class="btn btn-fantome btn-petit" id="btn-geoloc-profil">📍 Mettre à jour ma position</button>
+          <input type="hidden" name="latitude"><input type="hidden" name="longitude">
+          <button class="btn btn-vert btn-bloc" type="submit" style="margin-top:14px;">Enregistrer</button>
+        </form>
+        <div class="carte" style="max-width:440px;margin-top:16px;border-color:var(--danger);">
+          <h3 style="color:var(--danger);">Zone sensible</h3>
+          <p style="font-size:.85rem;color:var(--texte-clair);">Supprimer votre compte effacera vos informations personnelles. L'historique de vos commandes passées est conservé pour la comptabilité, sans lien avec votre identité.</p>
+          <button type="button" class="btn btn-danger btn-bloc" id="btn-supprimer-compte">Supprimer mon compte</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VUE DISCUSSION ===== -->
+  <section id="vue-discussion" class="vue masque">
+    <h2>Discutez avec nous</h2>
+    <div id="discussion-identification" class="carte" style="max-width:420px;">
+      <p style="font-size:.9rem;color:var(--texte-clair);">Entrez votre nom et votre numéro une seule fois — la conversation reprendra automatiquement à votre prochaine visite.</p>
+      <div class="champ"><label>Nom</label><input type="text" id="chat-nom"></div>
+      <div class="champ"><label>Téléphone</label><input type="tel" id="chat-telephone" required></div>
+      <button class="btn btn-terre btn-bloc" onclick="Chat.ouvrir()">Démarrer la discussion</button>
+    </div>
+    <div id="discussion-fenetre" class="masque">
+      <div class="chat-fenetre">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-saisie">
+          <input type="text" id="chat-input" placeholder="Écrivez votre message…">
+          <button class="btn btn-vert" onclick="Chat.envoyer()">Envoyer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VUE AVIS ===== -->
+  <section id="vue-avis" class="vue masque">
+    <div class="section-titre"><h2>Avis clients</h2></div>
+    <div class="carte" style="max-width:480px;margin-bottom:24px;">
+      <h3>Laisser un avis</h3>
+      <form id="form-avis">
+        <div class="champ"><label>Votre nom</label><input type="text" name="nom" required></div>
+        <div class="champ">
+          <label>Note</label>
+          <div class="etoiles" id="etoiles-choix">
+            <button type="button" data-note="1">★</button><button type="button" data-note="2">★</button>
+            <button type="button" data-note="3">★</button><button type="button" data-note="4">★</button>
+            <button type="button" data-note="5">★</button>
+          </div>
+          <input type="hidden" name="note" required>
+        </div>
+        <div class="champ"><label>Commentaire</label><textarea name="commentaire" rows="3"></textarea></div>
+        <button class="btn btn-or btn-bloc" type="submit">Envoyer mon avis</button>
+      </form>
+    </div>
+    <div id="liste-avis" class="grille-produits"></div>
+  </section>
+
+  <!-- ===== VUE IDÉES ===== -->
+  <section id="vue-idees" class="vue masque">
+    <h2>Boîte à idées</h2>
+    <p style="color:var(--texte-clair);max-width:520px;">Une idée pour améliorer nos produits, notre service ou le site ? Partagez-la — vous pouvez rester anonyme.</p>
+    <form id="form-idee" class="carte" style="max-width:480px;">
+      <div class="champ"><label>Votre nom <small>(facultatif)</small></label><input type="text" name="nom" placeholder="Anonyme"></div>
+      <div class="champ"><label>Votre idée</label><textarea name="contenu" rows="4" required></textarea></div>
+      <button class="btn btn-vert btn-bloc" type="submit">Envoyer mon idée</button>
+    </form>
+  </section>
+
+</main>
+
+<!-- ===== PANIER (panneau latéral) ===== -->
+<div class="voile" id="voile-panier"></div>
+<aside class="panneau" id="panneau-panier">
+  <div class="panneau-entete">
+    <h3>Mon panier</h3>
+    <button class="icone-btn" id="btn-fermer-panier">✕</button>
+  </div>
+  <div class="panneau-corps" id="contenu-panier"></div>
+  <div class="panneau-pied" id="pied-panier"></div>
+</aside>
+
+<!-- ===== MODALE COMMANDE ===== -->
+<div class="voile" id="voile-commande"></div>
+<aside class="panneau" id="panneau-commande">
+  <div class="panneau-entete">
+    <h3>Finaliser la commande</h3>
+    <button class="icone-btn" id="btn-fermer-commande">✕</button>
+  </div>
+  <div class="panneau-corps">
+    <form id="form-commande">
+      <div class="champ"><label>Nom complet</label><input type="text" name="client_nom" required></div>
+      <div class="champ"><label>Téléphone</label><input type="tel" name="client_telephone" required></div>
+      <div class="champ"><label>Localité de livraison</label><input type="text" name="client_localite" placeholder="Quartier, ville"></div>
+      <div class="champ">
+        <button type="button" class="btn btn-fantome btn-petit" id="btn-geoloc-commande">📍 Utiliser ma position pour un calcul précis</button>
+        <input type="hidden" name="latitude"><input type="hidden" name="longitude">
+        <small id="statut-geoloc-commande"></small>
+      </div>
+      <div class="champ">
+        <label>Remise premium (%) <small>si applicable</small></label>
+        <input type="number" name="remise_pourcentage" min="0" max="30" value="0">
+      </div>
+      <div class="champ">
+        <label>Mode de paiement</label>
+        <select name="mode_paiement">
+          <option value="comptant">Comptant à la livraison</option>
+          <option value="echelonne">Paiement échelonné (par mois)</option>
+        </select>
+      </div>
+      <div class="champ masque" id="champ-tranches">
+        <label>Nombre de mois</label>
+        <select name="nb_tranches">
+          <option value="1">1 mois</option>
+          <option value="2">2 mois</option>
+          <option value="3" selected>3 mois</option>
+          <option value="4">4 mois</option>
+          <option value="5">5 mois</option>
+          <option value="6">6 mois</option>
+        </select>
+        <small>Des frais s'appliquent à partir de 2 mois (visibles dans le récapitulatif).</small>
+      </div>
+      <div class="champ">
+        <label>Moyen de paiement</label>
+        <select name="fournisseur_paiement" id="select-fournisseur-paiement">
+          <option value="especes">Espèces à la livraison</option>
+        </select>
+        <small id="statut-fournisseur-paiement"></small>
+      </div>
+      <div class="carte" id="recapitulatif-commande" style="background:var(--creme);box-shadow:none;"></div>
+      <button class="btn btn-terre btn-bloc" type="submit" style="margin-top:14px;">Confirmer la commande</button>
+    </form>
+  </div>
+</aside>
+
+<footer>
+  <div class="conteneur">
+    <div>
+      <strong>🌾 Céréales Flex</strong><br>
+      Céréales · Farines · Son · Aliment bétail & volaille · Couveuses · Matériel d'élevage et d'agriculture
+    </div>
+    <div>
+      <a href="#" data-vue-lien="discussion">Nous contacter</a><br>
+      <a href="#" data-vue-lien="avis">Avis clients</a><br>
+      <a href="#" data-vue-lien="idees">Boîte à idées</a>
+    </div>
+    <div>
+      <a href="/admin">Espace administrateur</a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script src="/js/main.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

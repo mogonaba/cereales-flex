@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: cereales-flex
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+    # Le plan gratuit a un disque éphémère : la base SQLite est réinitialisée à chaque
+    # redéploiement/redémarrage. Pour une persistance garantie, ajoutez un disque :
+    # disk:
+    #   name: donnees
+    #   mountPath: /opt/render/project/src/data
+    #   sizeGB: 1

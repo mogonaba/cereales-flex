@@ -1,0 +1,13 @@
+{
+  "name": "Céréales Flex",
+  "short_name": "Céréales Flex",
+  "description": "Céréales, farines, aliments d'élevage et matériel agricole — livrés chez vous.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF3E3",
+  "theme_color": "#E8AC3D",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/images/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

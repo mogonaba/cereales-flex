@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --creme: #FAF3E3; --creme-fonce: #F0E6D2;
+  --or-millet: #E8AC3D; --or-millet-fonce: #C98E23;
+  --terre-cuite: #C1622D; --terre-cuite-fonce: #A34F22;
+  --vert-foret: #355E3B; --vert-foret-fonce: #23402A;
+  --texte: #2B2118; --texte-clair: #6E6153;
+  --blanc: #FFFDF8; --danger: #B3452C; --succes: #3D7A4C;
+  --ombre: 0 4px 14px rgba(43,33,24,.1);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--creme); color: var(--texte); font-family: 'Work Sans', sans-serif; }
+h1, h2, h3 { font-family: 'Fraunces', serif; margin: 0 0 .4em; }
+button { font-family: inherit; cursor: pointer; }
+
+#ecran-connexion {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--vert-foret) 0%, var(--vert-foret-fonce) 100%);
+}
+.carte-connexion { background: var(--blanc); padding: 34px; border-radius: 16px; width: min(380px, 90vw); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+.carte-connexion h1 { font-size: 1.5rem; color: var(--vert-foret-fonce); text-align: center; }
+.carte-connexion p { text-align: center; color: var(--texte-clair); font-size: .85rem; margin-top: -6px; }
+
+.champ { margin-bottom: 14px; }
+.champ label { display: block; font-weight: 600; font-size: .82rem; margin-bottom: 4px; }
+.champ input, .champ select, .champ textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid var(--creme-fonce);
+  font-family: inherit; font-size: .9rem; background: white;
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus { outline: 2px solid var(--or-millet); border-color: transparent; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; font-size: .88rem; }
+.btn-vert { background: var(--vert-foret); color: white; }
+.btn-vert:hover { background: var(--vert-foret-fonce); }
+.btn-terre { background: var(--terre-cuite); color: white; }
+.btn-terre:hover { background: var(--terre-cuite-fonce); }
+.btn-or { background: var(--or-millet); color: var(--texte); }
+.btn-fantome { background: var(--creme); color: var(--texte); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-bloc { width: 100%; justify-content: center; }
+.btn-petit { padding: 6px 12px; font-size: .78rem; }
+
+#app-admin { display: flex; min-height: 100vh; }
+.barre-laterale {
+  width: 240px; background: var(--vert-foret-fonce); color: var(--creme); flex-shrink: 0;
+  display: flex; flex-direction: column; padding: 20px 0;
+}
+.barre-laterale .logo { padding: 0 20px 20px; font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 10px; }
+.lien-nav {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px; color: rgba(255,255,255,.75);
+  font-weight: 500; font-size: .9rem; border: none; background: none; text-align: left; width: 100%; position: relative;
+}
+.lien-nav:hover { background: rgba(255,255,255,.06); color: white; }
+.lien-nav.actif { background: rgba(255,255,255,.1); color: var(--or-millet); font-weight: 700; }
+.lien-nav .pastille { margin-left: auto; background: var(--terre-cuite); color: white; font-size: .68rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; }
+.lien-nav.actif .barre-pointillee-admin, .lien-nav.actif::before {
+  content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; background-image: radial-gradient(circle, var(--or-millet) 1.3px, transparent 1.5px); background-size: 4px 8px; background-repeat: repeat-y;
+}
+.pied-lateral { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.12); font-size: .82rem; }
+
+.contenu-principal { flex: 1; padding: 28px 32px; max-width: 1180px; }
+.panneau-admin { display: none; }
+.panneau-admin.actif { display: block; }
+.entete-panneau { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 10px; }
+
+.grille-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 26px; }
+.carte-stat { background: var(--blanc); border-radius: 12px; padding: 18px; box-shadow: var(--ombre); }
+.carte-stat .valeur { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; color: var(--vert-foret-fonce); }
+.carte-stat .label { font-size: .82rem; color: var(--texte-clair); }
+.carte-stat.alerte .valeur { color: var(--terre-cuite-fonce); }
+
+.carte { background: var(--blanc); border-radius: 12px; padding: 20px; box-shadow: var(--ombre); margin-bottom: 18px; }
+
+table { width: 100%; border-collapse: collapse; background: var(--blanc); border-radius: 12px; overflow: hidden; box-shadow: var(--ombre); }
+thead th { background: var(--creme-fonce); text-align: left; padding: 10px 14px; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--texte-clair); }
+tbody td { padding: 11px 14px; border-top: 1px solid var(--creme-fonce); font-size: .88rem; vertical-align: middle; }
+tbody tr:hover { background: #FCFAF3; }
+
+.badge-statut { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .74rem; font-weight: 700; white-space: nowrap; }
+.badge-en_attente, .badge-nouvelle, .badge-en_attente_autorisation { background: #FCEBD5; color: #A6690E; }
+.badge-valide, .badge-approuve, .badge-confirmee, .badge-livree, .badge-autorisee, .badge-active, .badge-retenue, .badge-terminee { background: #DCEFDF; color: var(--succes); }
+.badge-rejete, .badge-annulee, .badge-refusee, .badge-rejetee { background: #F7DCD4; color: var(--danger); }
+.badge-en_cours, .badge-en_livraison { background: #E4E9F7; color: #3B5BA5; }
+
+select.select-statut { padding: 5px 8px; border-radius: 6px; border: 1px solid var(--creme-fonce); font-size: .82rem; }
+
+.sous-onglets-admin { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--creme-fonce); flex-wrap: wrap; }
+.sous-onglet-admin { padding: 8px 14px; font-size: .85rem; font-weight: 600; border: none; background: none; color: var(--texte-clair); }
+.sous-onglet-admin.actif { color: var(--terre-cuite-fonce); border-bottom: 2px solid var(--terre-cuite); }
+
+.liste-messages { display: flex; height: 65vh; background: var(--blanc); border-radius: 12px; box-shadow: var(--ombre); overflow: hidden; }
+.conv-liste { width: 260px; border-right: 1px solid var(--creme-fonce); overflow-y: auto; flex-shrink: 0; }
+.conv-item { padding: 12px 14px; border-bottom: 1px solid var(--creme-fonce); cursor: pointer; }
+.conv-item:hover, .conv-item.actif { background: var(--creme); }
+.conv-item strong { display: block; font-size: .88rem; }
+.conv-item small { color: var(--texte-clair); }
+.conv-fenetre { flex: 1; display: flex; flex-direction: column; }
+.conv-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.bulle { max-width: 70%; padding: 9px 13px; border-radius: 14px; font-size: .87rem; }
+.bulle.client { align-self: flex-start; background: var(--creme); }
+.bulle.admin { align-self: flex-end; background: var(--vert-foret); color: white; }
+.conv-saisie { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--creme-fonce); }
+.conv-saisie input { flex: 1; border: 1.5px solid var(--creme-fonce); border-radius: 999px; padding: 9px 14px; }
+
+.miniature-doc { width: 100%; max-width: 220px; border-radius: 8px; margin-top: 6px; cursor: zoom-in; }
+.grille-docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+
+.toast-zone { position: fixed; bottom: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--texte); color: var(--creme); padding: 11px 18px; border-radius: 10px; font-size: .86rem; box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
+.vide { text-align: center; padding: 30px; color: var(--texte-clair); }
+.masque { display: none !important; }
+.champ-fichier { display: block; border: 1.5px dashed var(--creme-fonce); border-radius: 10px; padding: 14px; text-align: center; background: white; cursor: pointer; }
+.champ-fichier.rempli { border-color: var(--vert-foret); background: #F0F7F1; }
+
+@media (max-width: 860px) {
+  #app-admin { flex-direction: column; }
+  .barre-laterale { width: 100%; flex-direction: row; overflow-x: auto; padding: 10px; }
+  .barre-laterale .logo, .pied-lateral { display: none; }
+  .lien-nav { width: auto; white-space: nowrap; }
+  .contenu-principal { padding: 18px; }
+  .liste-messages { flex-direction: column; height: auto; }
+  .conv-liste { width: 100%; max-height: 200px; }
+}
